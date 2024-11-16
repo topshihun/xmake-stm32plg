@@ -4,17 +4,18 @@
 -- 确定工作目录
 -- -- 默认使用当前目录
 -- 确定项目名称，默认为stm32
--- 确定stm32库文件，通过config指定文件路径，默认从网络上下载
+-- 确定stm32库文件，通过lib指定文件路径，默认从网络上下载
 -- -- 解压下载的文件
--- -- 将stm32库文件复制到工作目录，源文件放到lib/src下，头文件放到lib/include目录下
+-- -- 将stm32库文件（lib/Libraries下）复制到工作目录，源文件放到lib/src下，头文件放到lib/include目录下
+-- 建立include目录，放入stm32f10x_conf.h、stm32f10x_it.h（templete里）
+-- 建立src目录，里面放入main.c、stm32f10x_it.c、system_stm32f10x.c（templete里）
 -- 编写项目的xmake.lua
--- -- 
--- -- 确定编译器以及编译选项
 
 import("core.base.option")
 import("lib.detect.find_program")
 import("net.http")
 import("utils.archive")
+import("create_xmake_file")
 
 function main()
     -- find arm-gcc and openocd
@@ -55,4 +56,14 @@ function main()
     os.cp(project_dir .. "/en.stsw-stm32054_v3-6-0/**.h", project_dir .. "/lib/include/")
     os.cp(project_dir .. "/en.stsw-stm32054_v3-6-0/**.c", project_dir .. "/lib/src/")
 
+    -- create include directory
+    os.mkdir(project_dir .. "/include")
+
+    -- create src directory
+    os.mkdir(project_dir .. "/src")
+    -- create main.c
+    os.writefile(project_dir .. "/src/main.c", [[]])
+
+    -- create xmake.lua
+    create_xmake_file(project_name, project_dir)
 end
