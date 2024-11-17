@@ -6,6 +6,7 @@ task("create-stm32")
         description = "Create a stm32 project.",
         options = 
         {
+            -- {'abbreviation', "full name", "mode(kv,k,vs)", "describe"}
             {'n', "name", "kv", "stm32", "Set the project name."},
             {nil, "dir", "kv", nil, "Set the project dirctory."}
         }
