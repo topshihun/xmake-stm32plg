@@ -2,8 +2,8 @@
 -- -- 
 -- -- 确定编译器以及编译选项
 
-function create_xmake_file(project_name, project_dir) {
-/*
+function main(project_name, project_dir)
+--[[
 local target_name = "target_name"
 set_project("stm32-xmake")
 
@@ -107,5 +107,5 @@ target(target_name..".elf")
         -- os.run("arm-none-eabi-objdump.exe -D ./build/cross/m3/release/"..target_name..".elf > "..target_name..".s")
     end)
 
-*/
-}
+--]]
+end
