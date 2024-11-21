@@ -87,6 +87,7 @@ import("lib.detect.find_program")
 import("net.http")
 import("utils.archive")
 import("create_xmake_file")
+import("create_ld_linker")
 
 function main()
     -- find arm-gcc and openocd
@@ -161,7 +162,8 @@ function main()
     cprint("/startup_stm32f10x_hd.s created")
 
     -- create linker file
-
+    local file_name = "stm32.ld"
+    create_ld_linker(project_dir, file_name)
     cprint("create linker file finished")
 
     -- create xmake.lua
