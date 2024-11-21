@@ -108,4 +108,24 @@ target(target_name..".elf")
     end)
 
 --]]
+
+local init_project =
+[[set_project("%s")
+set_version("1.0.0")]]
+
+local init_toolchain = {}
+init_toolchain["toolchain"] = "arm-none-eabi"
+init_toolchain["kind"] = "standalone"
+init_toolchain["sdkdir"] = "D:/arm-gnu-toolchain"
+
+local init_task = {}
+init_task["task"] = "download"
+init_task["on_run"] = [["function()
+    os.exec("openocd -f \"your path\" -f \"your path\" -c init -c halt -c \"flash write_image erase ./build/".. target_name .. ".bin 0x08000000\" -c reset -c shutdown")
+end"]]
+init_task["menu"] = {}
+init_task["menu"]["usage"] = "xmake download"
+init_task["menu"]["description"] = "Use opocd command. You must to change some params in xmake.lua."
+init_task["menu"]["options"] = {}
+
 end
