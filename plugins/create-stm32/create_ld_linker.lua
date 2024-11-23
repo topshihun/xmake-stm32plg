@@ -106,9 +106,9 @@ function main(project_dir, file_name)
         file:write("\t} >RAM\n")
 
         file:write("\t/DISCARD/ : {\n")
-        file:write("\t\tlibc.a (*)")
-        file:write("\t\tlibm.a (*)")
-        file:write("\t\tlibgcc.a (*)")
+        file:write("\t\tlibc.a (*)\n")
+        file:write("\t\tlibm.a (*)\n")
+        file:write("\t\tlibgcc.a (*)\n")
         file:write("\t}\n")
 
         file:write("\t.ARM.attributes 0 : { *(.ARM.attributes) }\n")

@@ -108,6 +108,9 @@ target(target_name..".elf")
     end)
 
 --]]
+local elf_name = project_name .. ".elf"
+local hex_name = project_name .. ".hex"
+local bin_name = project_name .. ".bin"
 
 local init_project =
 [[set_project("%s")
@@ -120,12 +123,43 @@ init_toolchain["sdkdir"] = "D:/arm-gnu-toolchain"
 
 local init_task = {}
 init_task["task"] = "download"
-init_task["on_run"] = [["function()
-    os.exec("openocd -f \"your path\" -f \"your path\" -c init -c halt -c \"flash write_image erase ./build/".. target_name .. ".bin 0x08000000\" -c reset -c shutdown")
-end"]]
+init_task["on_run"] = vformate([["function()
+    os.exec("openocd -f \"your path\" -f \"your path\" -c init -c halt -c \"flash write_image erase ./build/${bin_name} 0x08000000\" -c reset -c shutdown")
+end"]])
 init_task["menu"] = {}
 init_task["menu"]["usage"] = "xmake download"
 init_task["menu"]["description"] = "Use opocd command. You must to change some params in xmake.lua."
 init_task["menu"]["options"] = {}
+
+local init_target = {}
+init_target["target"] = elf_name
+init_target["kind"] = "binary"
+init_target["toolchains"] = {"arm-none-eabi"}
+init_target["plat"] = "cross"
+init_target["arch"] = "m3"
+-- init_target["defines"] = {"STM32F10X_HD", "USE_STDPERIPH_DRIVER"}
+init_target["links"] = {"c", "m", "nosys", "rdimon"}
+init_target["files"] = {"startup_stm32f10x_hd.s"}
+init_target["cflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
+init_target["asflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
+init_target["ldflags"] = {"-Og", "-mcpu=cortex-m3", "-TSTM32F103VETx_FLASH.ld", "-Wl,--gc-sections", "--specs=nosys.specs", "-u _printf_float"}
+init_target["includedirs"] = {"core/include", "lib/include", "include"}
+init_target["files"] = {"core/src/*.c", "lib/src/*.c", "src/*.c"}
+init_target["after_build"] = vformate([["
+    after_build(
+        "function(target)
+        cprint("Compile finished!!!")
+        cprint("Next, generate hex and bin files.")
+        os.exec("arm-none-eabi-objcopy -O ihex ./build/cross/m3/release/ ${elf_name} ./build/${hex_name}")
+        os.exec("arm-none-eabi-objcopy -O binary ./build/cross/m3/release/${elf_name} ./build/${bin_name}")
+        print("Generate hex and bin files ok!!!")
+
+        print(" ");
+        print("****************Storage space occupancy situation*************************")
+        os.exec("arm-none-eabi-size -Ax ./build/cross/m3/release/"..target_name..".elf")
+        os.exec("arm-none-eabi-size -Bx ./build/cross/m3/release/"..target_name..".elf")
+        os.exec("arm-none-eabi-size -Bd ./build/cross/m3/release/"..target_name..".elf")
+    end)"]]
+)
 
 end

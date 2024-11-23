@@ -78,7 +78,7 @@ lib/
         stm32f10x_usart.c
         stm32f10x_wwdg.c
 startup_stm32f10x_hd.s
-STM32F103ZETx_FLASH.ld
+stm32.ld
 xmake.lua
 --]]
 
