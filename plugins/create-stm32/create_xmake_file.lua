@@ -123,7 +123,7 @@ init_toolchain["sdkdir"] = "D:/arm-gnu-toolchain"
 
 local init_task = {}
 init_task["task"] = "download"
-init_task["on_run"] = vformate([["function()
+init_task["on_run"] = vformat([["function()
     os.exec("openocd -f \"your path\" -f \"your path\" -c init -c halt -c \"flash write_image erase ./build/${bin_name} 0x08000000\" -c reset -c shutdown")
 end"]])
 init_task["menu"] = {}
@@ -145,7 +145,7 @@ init_target["asflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-
 init_target["ldflags"] = {"-Og", "-mcpu=cortex-m3", "-TSTM32F103VETx_FLASH.ld", "-Wl,--gc-sections", "--specs=nosys.specs", "-u _printf_float"}
 init_target["includedirs"] = {"core/include", "lib/include", "include"}
 init_target["files"] = {"core/src/*.c", "lib/src/*.c", "src/*.c"}
-init_target["after_build"] = vformate([["
+init_target["after_build"] = vformat([["
     after_build(
         "function(target)
         cprint("Compile finished!!!")
