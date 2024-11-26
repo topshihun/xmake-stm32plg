@@ -121,9 +121,8 @@ target(target_name..".elf")
 
     local init_task = {}
     init_task["task"] = "download"
-    init_task["on_run"] = vformat([["function()
-        os.exec("openocd -f \"your path\" -f \"your path\" -c init -c halt -c \"flash write_image erase ./build/${bin_name} 0x08000000\" -c reset -c shutdown")
-    end"]])
+    local buff = vformat("os.exec(\"openocd -f interface/cmsis-dap.cfg -f target/stm32f10x.cfg -c init -c halt -c \\\"flash write_image erase ./build/%s 0x08000000\\\" -c reset -c shutdown\")", elf_name)
+    init_task["on_run"] = vformat("function()\n\t\t%s\n\tend", buff)
     init_task["menu"] = {}
     init_task["menu"]["usage"] = "xmake download"
     init_task["menu"]["description"] = "Use opocd command. You must to change some params in xmake.lua."
@@ -163,7 +162,28 @@ target(target_name..".elf")
     -- write file
     local file = io.open(project_dir .. "/xmake.lua", "w")
     if file then
-        file:write(init_project)
+        file:write(init_project .. "\n")
+        file:write("\n")
+
+        file:write(vformat("toolchain(\"%s\")\n", init_toolchain["toolchain"]))
+        file:write(vformat("\tset_kind(\"%s\")\n", init_toolchain["kind"]))
+        file:write(vformat("\tset_sdkdir(\"%s\")\n", init_toolchain["sdkdir"]))
+        file:write("toolchain_end()\n")
+        file:write("\n")
+
+        file:write(vformat("task(\"%s\")\n", init_task["task"]))
+        file:write(vformat("\ton_run(%s)\n", init_task["on_run"]))
+        file:write(vformat("\tset_menu {\n"))
+        file:write(vformat("\t\tusage = \"%s\"\n", init_task["menu"]["usage"]))
+        file:write(vformat("\t\tdescription = \"%s\"\n", init_task["menu"]["description"]))
+        file:write(vformat("\t\toptions = {\n"))
+        for k, v in pairs(init_task["menu"]["options"]) do
+            file:write(vformat("\t\t\t{\"%s\", \"%s\"}\n", k, v))
+        end
+        file:write(vformat("\t\t}\n"))
+        file:write(vformat("\t}\n"))
+        file:write("task_end()\n")
+        file:write("\n")
     end
 
 end
