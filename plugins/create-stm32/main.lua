@@ -147,8 +147,17 @@ function main()
     os.mkdir(project_dir .. "/src")
     os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c", project_dir .. "/src/stm32f10x_it.c")
     os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/system_stm32f10x.c", project_dir .. "/src/system_stm32f10x.c")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/main.c", project_dir .. "/src/main.c")
     cprint("/src/stm32f10x_it.c and /src/system_stm32f10x.c created")
+    -- create main
+    local main_str = [[#define USE_STDPERIPH_DRIVER
+#define STM32F10X_HD
+#include "stm32f10x_it.h"
+    
+int main(void)
+{
+    return 0;
+}]]
+    io.open(project_dir .. "/src/main.c", "w"):write(main_str)
     cprint("/src/main.c created")
 
     -- create core directory

@@ -139,7 +139,7 @@ target(target_name..".elf")
     init_target["files"] = {"startup_stm32f10x_hd.s"}
     init_target["cflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
     init_target["asflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
-    init_target["ldflags"] = {"-Og", "-mcpu=cortex-m3", "-TSTM32F103VETx_FLASH.ld", "-Wl,--gc-sections", "--specs=nosys.specs", "-u _printf_float"}
+    init_target["ldflags"] = {"-Og", "-mcpu=cortex-m3", "-Tstm32.ld", "-Wl,--gc-sections", "--specs=nosys.specs", "-u _printf_float"}
     init_target["includedirs"] = {"core/include", "lib/include", "include"}
     init_target["files"] = {"core/src/*.c", "lib/src/*.c", "src/*.c"}
     init_target["after_build"] = vformat([[
