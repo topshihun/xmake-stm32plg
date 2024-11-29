@@ -18,8 +18,10 @@
 --[[
 项目目录结构
 include/
+    stm32f10x.h
     stm32f10x_conf.h
     stm32f10x_it.h
+    system_stm32f10x.h
 src/
     main.c
     stm32f10x_conf.c
@@ -139,8 +141,10 @@ function main()
 
     -- create include directory
     os.mkdir(project_dir .. "/include")
+    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/stm32f10x.h", project_dir .. "/include/stm32f10x.h")
     os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_conf.h", project_dir .. "/include/stm32f10x_conf.h")
     os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_it.h", project_dir .. "/include/stm32f10x_it.h")
+    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/system_stm32f10x.h", project_dir .. "/include/system_stm32f10x.h")
     cprint("/include/stm32f10x_conf.h and /include/stm32f10x_it.h created")
 
     -- create src directory
