@@ -156,7 +156,7 @@ target(target_name..".elf")
         os.exec("arm-none-eabi-size -Ax ./build/cross/m3/release/]] .. elf_name .. [[")
         os.exec("arm-none-eabi-size -Bx ./build/cross/m3/release/]] .. elf_name .. [[")
         os.exec("arm-none-eabi-size -Bd ./build/cross/m3/release/]] .. elf_name .. [[")
-    end)]]
+        end)]]
     )
 
     -- write file
@@ -229,7 +229,7 @@ target(target_name..".elf")
             file:write(vformat("\"%s\", ", v))
         end
         file:write("{force = true})\n")
-        file:write(init_target["after_build"])
+        file:write(init_target["after_build"] .. "\n")
         file:write("target_end()\n")
 
         file:close()

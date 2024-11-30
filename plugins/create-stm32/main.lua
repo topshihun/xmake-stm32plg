@@ -11,7 +11,7 @@
 -- 建立src目录，里面放入main.c、stm32f10x_it.c、system_stm32f10x.c（templete里）
 -- 建立core目录，里面放入core_cm3.c，core_cm3.h
 -- 选定启动文件，默认startup_stm32f10x_hd.s（armgcc里面）
--- 编写链接文件STM32F103ZETx_FLASH.ld（自写）
+-- 编写链接文件stm32.ld（自写）
 -- 编写项目的xmake.lua
 -- 修改core_cm3.c（arm-gcc编译需要修改汇编）
 
