@@ -140,8 +140,8 @@ target(target_name..".elf")
     init_target["cflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
     init_target["asflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
     init_target["ldflags"] = {"-Og", "-mcpu=cortex-m3", "-Tstm32.ld", "-Wl,--gc-sections", "--specs=nosys.specs", "-u _printf_float"}
-    init_target["includedirs"] = {"core/include", "lib/include", "include"}
-    init_target["files"] = {"core/src/*.c", "lib/src/*.c", "src/*.c"}
+    init_target["includedirs"] = {"core", "lib/include", "include"}
+    init_target["files"] = {"core/*.c", "lib/src/*.c", "src/*.c"}
     init_target["after_build"] = vformat([[
     after_build(
         function(target)
@@ -174,8 +174,8 @@ target(target_name..".elf")
         file:write(vformat("task(\"%s\")\n", init_task["task"]))
         file:write(vformat("\ton_run(%s)\n", init_task["on_run"]))
         file:write(vformat("\tset_menu {\n"))
-        file:write(vformat("\t\tusage = \"%s\"\n", init_task["menu"]["usage"]))
-        file:write(vformat("\t\tdescription = \"%s\"\n", init_task["menu"]["description"]))
+        file:write(vformat("\t\tusage = \"%s\",\n", init_task["menu"]["usage"]))
+        file:write(vformat("\t\tdescription = \"%s\",\n", init_task["menu"]["description"]))
         file:write(vformat("\t\toptions = {\n"))
         for k, v in pairs(init_task["menu"]["options"]) do
             file:write(vformat("\t\t\t{\"%s\", \"%s\"}\n", k, v))
@@ -190,7 +190,7 @@ target(target_name..".elf")
         file:write(vformat("\tset_toolchains({\"%s\"})\n", table.concat(init_target["toolchains"], ", ")))
         file:write(vformat("\tset_plat(\"%s\")\n", init_target["plat"]))
         file:write(vformat("\tset_arch(\"%s\")\n", init_target["arch"]))
-        file:write("\tset_links(")
+        file:write("\tadd_links(")
         for k, v in pairs(init_target["links"]) do
             file:write(vformat("\"%s\"", v))
             if k ~= #init_target["links"] then
@@ -198,7 +198,7 @@ target(target_name..".elf")
             end
         end
         file:write(")\n")
-        file:write("\tset_files(")
+        file:write("\tadd_files(")
         for k, v in pairs(init_target["files"]) do
             file:write(vformat("\"%s\"", v))
             if k ~= #init_target["files"] then
@@ -206,7 +206,7 @@ target(target_name..".elf")
             end
         end
         file:write(")\n")
-        file:write("\tset_includedirs(")
+        file:write("\tadd_includedirs(")
         for k, v in pairs(init_target["includedirs"]) do
             file:write(vformat("\"%s\"", v))
             if k ~= #init_target["includedirs"] then
@@ -214,17 +214,17 @@ target(target_name..".elf")
             end
         end
         file:write(")\n")
-        file:write("\tset_cflags(")
+        file:write("\tadd_cflags(")
         for k, v in pairs(init_target["cflags"]) do
             file:write(vformat("\"%s\", ", v))
         end
         file:write("{force = true})\n")
-        file:write("\tset_asflags(")
+        file:write("\tadd_asflags(")
         for k, v in pairs(init_target["asflags"]) do
             file:write(vformat("\"%s\", ", v))
         end
         file:write("{force = true})\n")
-        file:write("\tset_ldflags(")
+        file:write("\tadd_ldflags(")
         for k, v in pairs(init_target["ldflags"]) do
             file:write(vformat("\"%s\", ", v))
         end
