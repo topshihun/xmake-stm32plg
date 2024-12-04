@@ -114,6 +114,8 @@ target(target_name..".elf")
 
     local init_project = vformat("set_project(\"%s\")\nset_version(\"1.0.0\")", project_name)
 
+    local init_mode = {"mode.debug", "mode.release"}
+
     local init_toolchain = {}
     init_toolchain["toolchain"] = "arm-none-eabi"
     init_toolchain["kind"] = "standalone"
@@ -163,6 +165,15 @@ target(target_name..".elf")
     local file = io.open(project_dir .. "/xmake.lua", "w")
     if file then
         file:write(init_project .. "\n")
+
+        file:write(vformat("add_rules("))
+        for k, v in pairs(init_mode) do
+            file:write(vformat("\"%s\"", v))
+            if k ~= #init_mode then
+                file:write(", ")
+            end
+        end
+        file:write(")\n")
         file:write("\n")
 
         file:write(vformat("toolchain(\"%s\")\n", init_toolchain["toolchain"]))
@@ -186,6 +197,11 @@ target(target_name..".elf")
         file:write("\n")
 
         file:write(vformat("target(\"%s\")\n", init_target["target"]))
+
+        file:write(vformat("\tif is_mode(\"%s\") then\n", init_mode[1]))
+        file:write(vformat("\t\tadd_cflags(\"-g\", \"-gdwarf-2\")\n"))
+        file:write(vformat("\tend\n"))
+        
         file:write(vformat("\tset_kind(\"%s\")\n", init_target["kind"]))
         file:write(vformat("\tset_toolchains({\"%s\"})\n", table.concat(init_target["toolchains"], ", ")))
         file:write(vformat("\tset_plat(\"%s\")\n", init_target["plat"]))
