@@ -155,7 +155,7 @@ function main()
     -- create main
     local main_str = [[#define USE_STDPERIPH_DRIVER
 #define STM32F10X_HD
-#include "stm32f10x_it.h"
+#include "stm32f10x.h"
     
 int main(void)
 {

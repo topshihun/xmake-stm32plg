@@ -136,7 +136,7 @@ target(target_name..".elf")
     init_target["toolchains"] = {"arm-none-eabi"}
     init_target["plat"] = "cross"
     init_target["arch"] = "m3"
-    -- init_target["defines"] = {"STM32F10X_HD", "USE_STDPERIPH_DRIVER"}
+    init_target["defines"] = {"STM32F10X_HD", "USE_STDPERIPH_DRIVER"}
     init_target["links"] = {"c", "m", "nosys", "rdimon"}
     init_target["files"] = {"startup_stm32f10x_hd.s"}
     init_target["cflags"] = {"-Og", "-mcpu=cortex-m3", "-mthumb", "-Wall", "-fdata-sections", "-ffunction-sections", "-g -gdwarf-2"}
@@ -206,6 +206,7 @@ target(target_name..".elf")
         file:write(vformat("\tset_toolchains({\"%s\"})\n", table.concat(init_target["toolchains"], ", ")))
         file:write(vformat("\tset_plat(\"%s\")\n", init_target["plat"]))
         file:write(vformat("\tset_arch(\"%s\")\n", init_target["arch"]))
+        file:write(vformat("\tadd_defines(\"%s\")\n", table.concat(init_target["defines"], "\", \"")))
         file:write("\tadd_links(")
         for k, v in pairs(init_target["links"]) do
             file:write(vformat("\"%s\"", v))
