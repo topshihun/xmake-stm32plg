@@ -91,29 +91,34 @@ import("utils.archive")
 import("create_xmake_file")
 import("create_ld_linker")
 
+local verbose = option.get("verbose")
+
+function correct_tools(tools)
+    for _, tool in ipairs(tools) do
+        if not find_program(tool) then
+            cprint("${color.error}error: %s not found!", tool)
+            return false
+        else
+            if verbose then
+                cprint("${color.success}%s found!", tool)
+            end
+        end
+    end
+    return true
+end
+
 function main()
     -- find arm-gcc and openocd
-    local arm_gcc = find_program("arm-none-eabi-gcc")
-    if not arm_gcc then
-        cprint("${color.error}arm-gcc not found!")
+    tools = {"arm-none-eabi-gcc", "openocd"}
+    if not correct_tools(tools) then
         return
-    else
-        cprint("${color.success}%s found!", arm_gcc)
-    end
-    local openocd = find_program("openocd")
-    if not openocd then
-        cprint("${color.error}openocd not found!")
-        return
-    else
-        cprint("${color.success}%s found!", openocd)
     end
 
     -- correct project dir
     local project_dir = option.get("dir")
-    if not project_dir then
-        project_dir = os.curdir()
+    if verbose then
+        cprint("project dir: %s", project_dir)
     end
-    cprint("project dir: %s", project_dir)
 
     -- correct project name
     local project_name = option.get("name")
@@ -121,7 +126,7 @@ function main()
 
     -- correct project lib.zip
     local lib_zip = option.get("lib")
-    cprint("current lib: %s", lib_zip)
+    cprint("stm32 lib name: %s", lib_zip)
 
     -- download stm32 lib
     if(not os.exists(project_dir .. "/" .. lib_zip)) then
