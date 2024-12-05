@@ -5,7 +5,7 @@ function main(project_dir, file_name)
 
         file:write("ENTRY(Reset_Handler)\n")
 
-        file:write("_estack = ORIGIN(RAM) + LENGTH(RAM)\n")
+        file:write("_estack = ORIGIN(RAM) + LENGTH(RAM);\n")
 
         file:write("MEMORY\n")
         file:write("{\n")
@@ -43,7 +43,7 @@ function main(project_dir, file_name)
         file:write("\t\t. = ALIGN(4);\n")
         file:write("\t\t*(.rodata)\n")
         file:write("\t\t*(.rodata*)\n")
-        file:write("\t\tALIGN(4);\n")
+        file:write("\t\t. = ALIGN(4);\n")
         file:write("\t} >FLASH\n")
 
         file:write("\t.ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH\n")
