@@ -90,8 +90,19 @@ import("net.http")
 import("utils.archive")
 import("create_xmake_file")
 import("create_ld_linker")
+import("common")
 
 local verbose = option.get("verbose")
+
+-- name not to be build, core, include, lib, src and name just be made in characters
+function legal_name(name)
+    if not string.match(name, "%w") == name then
+        common.error_message("name must be made in characters")
+    end
+    if name == "build" or name == "core" or name == "include" or name == "lib" or name == "src" then
+        common.error_message("name not to be " .. name .. ", try other name")
+    end
+end
 
 function correct_tools(tools)
     for _, tool in ipairs(tools) do
@@ -122,11 +133,14 @@ function main()
 
     -- correct project name
     local project_name = option.get("name")
+    legal_name(project_name)
     cprint("create project: %s", project_name)
 
     -- correct project lib.zip
-    local lib_zip = option.get("lib")
-    cprint("stm32 lib name: %s", lib_zip)
+    local lib_name = option.get("lib")
+    legal_name(lib_name)
+    local lib_zip = lib_name .. ".zip"
+    cprint("stm32 lib name: %s", lib_name)
 
     -- download stm32 lib
     if(not os.exists(project_dir .. "/" .. lib_zip)) then
@@ -136,7 +150,7 @@ function main()
         cprint("${color.success}download finished")
     end
     cprint("extract stm32 lib")
-    archive.extract(project_dir .. "/" .. lib_zip, project_dir .. "/lib_dir")
+    archive.extract(project_dir .. "/" .. lib_zip, project_dir .. "/" .. lib_name)
     cprint("${color.success}extract finished")
 
     -- collect all source files and copy to correct directory
@@ -166,7 +180,7 @@ int main(void)
 {
     return 0;
 }]]
-    io.open(project_dir .. "/src/main.c", "w"):write(main_str)
+    io.open(project_dir .. "/src/main.c", "w"):write(main_str):close()
     cprint("/src/main.c created")
 
     -- create core directory
