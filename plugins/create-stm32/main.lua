@@ -140,6 +140,7 @@ function main()
     local lib_name = option.get("lib")
     legal_name(lib_name)
     local lib_zip = lib_name .. ".zip"
+    local lib_dir = project_dir .. "/" .. lib_name
     cprint("stm32 lib name: %s", lib_name)
 
     -- download stm32 lib
@@ -154,22 +155,22 @@ function main()
     cprint("${color.success}extract finished")
 
     -- collect all source files and copy to correct directory
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/STM32F10x_StdPeriph_Driver/**.h", project_dir .. "/lib/include/")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/STM32F10x_StdPeriph_Driver/**.c", project_dir .. "/lib/src/")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/STM32F10x_StdPeriph_Driver/**.h", project_dir .. "/lib/include/")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/STM32F10x_StdPeriph_Driver/**.c", project_dir .. "/lib/src/")
     cprint("/lib/include/ and /lib/src/ created")
 
     -- create include directory
     os.mkdir(project_dir .. "/include")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/stm32f10x.h", project_dir .. "/include/stm32f10x.h")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_conf.h", project_dir .. "/include/stm32f10x_conf.h")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_it.h", project_dir .. "/include/stm32f10x_it.h")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/system_stm32f10x.h", project_dir .. "/include/system_stm32f10x.h")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/stm32f10x.h", project_dir .. "/include/stm32f10x.h")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_conf.h", project_dir .. "/include/stm32f10x_conf.h")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_it.h", project_dir .. "/include/stm32f10x_it.h")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/system_stm32f10x.h", project_dir .. "/include/system_stm32f10x.h")
     cprint("/include/stm32f10x_conf.h and /include/stm32f10x_it.h created")
 
     -- create src directory
     os.mkdir(project_dir .. "/src")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c", project_dir .. "/src/stm32f10x_it.c")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/system_stm32f10x.c", project_dir .. "/src/system_stm32f10x.c")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c", project_dir .. "/src/stm32f10x_it.c")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Project/STM32F10x_StdPeriph_Template/system_stm32f10x.c", project_dir .. "/src/system_stm32f10x.c")
     cprint("/src/stm32f10x_it.c and /src/system_stm32f10x.c created")
     -- create main
     local main_str = [[#define USE_STDPERIPH_DRIVER
@@ -180,17 +181,17 @@ int main(void)
 {
     return 0;
 }]]
-    io.open(project_dir .. "/src/main.c", "w"):write(main_str):close()
+    io.open(project_dir .. "/src/main.c", "w"):write(main_str)
     cprint("/src/main.c created")
 
     -- create core directory
     os.mkdir(project_dir .. "/core")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/CoreSupport/core_cm3.c", project_dir .. "/core/core_cm3.c")
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/CoreSupport/core_cm3.h", project_dir .. "/core/core_cm3.h")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/CoreSupport/core_cm3.c", project_dir .. "/core/core_cm3.c")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/CoreSupport/core_cm3.h", project_dir .. "/core/core_cm3.h")
     cprint("/core/core_cm3.c and /core/core_cm3.h created")
 
     -- create startup file
-    os.cp(project_dir .. "/lib_dir/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/gcc_ride7/startup_stm32f10x_hd.s", project_dir .. "/startup_stm32f10x_hd.s")
+    os.cp(lib_dir .. "/STM32F10x_StdPeriph_Lib_V3.6.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/gcc_ride7/startup_stm32f10x_hd.s", project_dir .. "/startup_stm32f10x_hd.s")
     cprint("/startup_stm32f10x_hd.s created")
 
     -- create linker file
